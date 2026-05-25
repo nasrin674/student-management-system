@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Attendance Report</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+    <h1>Attendance Percentage Report</h1>
+
+    <table border="1">
+
+        <tr>
+            <th>Student Name</th>
+            <th>Attendance Percentage</th>
+        </tr>
+
+        {% for report in reports %}
+
+        <tr>
+
+            <td>{{ report[0] }}</td>
+
+            <td>
+
+                {{ "%.2f"|format(report[1]) }} %
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>

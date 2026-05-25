@@ -16,7 +16,14 @@ def init_db():
             department TEXT
         )
     ''')
-
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS attendance (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER,
+            date TEXT,
+            status TEXT
+        )
+    ''')
     conn.commit()
     conn.close()
 @app.route('/login', methods=['GET', 'POST'])
@@ -129,6 +136,97 @@ def edit_student(id):
     conn.close()
 
     return render_template('edit.html', student=student)
+@app.route('/attendance', methods=['GET', 'POST'])
+def attendance():
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    # When attendance form submitted
+    if request.method == 'POST':
+
+        date = request.form['date']
+
+        cursor.execute("SELECT * FROM students")
+        students = cursor.fetchall()
+
+        for student in students:
+
+            student_id = student[0]
+
+            status = request.form.get(f'attendance_{student_id}')
+
+            cursor.execute(
+                "INSERT INTO attendance (student_id, date, status) VALUES (?, ?, ?)",
+                (student_id, date, status)
+            )
+
+        conn.commit()
+        conn.close()
+
+        return "Attendance Saved Successfully"
+@app.route('/view_attendance')
+def view_attendance():
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT students.name,
+               attendance.date,
+               attendance.status
+
+        FROM attendance
+
+        JOIN students
+        ON attendance.student_id = students.id
+    ''')
+
+    records = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'view_attendance.html',
+        records=records
+    )
+@app.route('/attendance_report')
+def attendance_report():
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT students.name,
+
+        COUNT(CASE WHEN attendance.status = 'Present'
+              THEN 1 END) * 100.0 / COUNT(attendance.id)
+
+        AS percentage
+
+        FROM attendance
+
+        JOIN students
+        ON attendance.student_id = students.id
+
+        GROUP BY students.id
+    ''')
+
+    reports = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'attendance_report.html',
+        reports=reports
+    )
+    # Load students
+    cursor.execute("SELECT * FROM students")
+    students = cursor.fetchall()
+
+    conn.close()
+
+    return render_template('attendance.html', students=students)
 @app.route('/logout')
 def logout():
 
