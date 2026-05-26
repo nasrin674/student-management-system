@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Add Marks</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+    <h1>Add Student Marks</h1>
+
+    <form method="POST">
+
+        <label>Student:</label>
+
+        <select name="student_id">
+
+            {% for student in students %}
+
+            <option value="{{ student[0] }}">
+
+                {{ student[1] }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <br><br>
+
+        <label>Subject:</label>
+
+        <input type="text" name="subject" required>
+
+        <br><br>
+
+        <label>Marks:</label>
+
+        <input type="number" name="marks" required>
+
+        <br><br>
+
+        <button type="submit">
+
+            Save Marks
+
+        </button>
+
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Marks Report</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+    <h1>Student Marks Report</h1>
+
+    <table border="1">
+
+        <tr>
+            <th>Student Name</th>
+            <th>Average Marks</th>
+            <th>Grade</th>
+        </tr>
+
+        {% for report in reports %}
+
+        <tr>
+
+            <td>{{ report[0] }}</td>
+
+            <td>
+
+                {{ "%.2f"|format(report[1]) }}
+
+            </td>
+
+            <td>
+
+                {% if report[1] >= 90 %}
+
+                    A+
+
+                {% elif report[1] >= 75 %}
+
+                    A
+
+                {% elif report[1] >= 60 %}
+
+                    B
+
+                {% elif report[1] >= 40 %}
+
+                    C
+
+                {% else %}
+
+                    Fail
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</body>
+</html>

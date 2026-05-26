@@ -24,6 +24,14 @@ def init_db():
             status TEXT
         )
     ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS marks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER,
+            subject TEXT,
+            marks INTEGER
+        )
+    ''')
     conn.commit()
     conn.close()
 @app.route('/login', methods=['GET', 'POST'])
@@ -38,7 +46,7 @@ def login():
 
             session['user'] = username
 
-            return redirect('/students')
+            return redirect('/dashboard')
 
         else:
             return "Invalid Username or Password"
@@ -47,7 +55,11 @@ def login():
 # Home page
 @app.route('/')
 def home():
-    return render_template('index.html')
+
+    if 'user' in session:
+        return redirect('/dashboard')
+
+    return redirect('/login')
 
 # Add student
 @app.route('/add', methods=['POST'])
@@ -227,6 +239,97 @@ def attendance_report():
     conn.close()
 
     return render_template('attendance.html', students=students)
+@app.route('/add_marks', methods=['GET', 'POST'])
+def add_marks():
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    # Save marks
+    if request.method == 'POST':
+
+        student_id = request.form['student_id']
+        subject = request.form['subject']
+        marks = request.form['marks']
+
+        cursor.execute(
+            "INSERT INTO marks (student_id, subject, marks) VALUES (?, ?, ?)",
+            (student_id, subject, marks)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return "Marks Added Successfully"
+
+    # Load students
+    cursor.execute("SELECT * FROM students")
+    students = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'add_marks.html',
+        students=students
+    )
+@app.route('/view_marks')
+def view_marks():
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT students.name,
+               marks.subject,
+               marks.marks
+
+        FROM marks
+
+        JOIN students
+        ON marks.student_id = students.id
+    ''')
+
+    records = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'view_marks.html',
+        records=records
+    )
+@app.route('/marks_report')
+def marks_report():
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT students.name,
+               AVG(marks.marks)
+
+        FROM marks
+
+        JOIN students
+        ON marks.student_id = students.id
+
+        GROUP BY students.id
+    ''')
+
+    reports = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'marks_report.html',
+        reports=reports
+    )
+@app.route('/dashboard')
+def dashboard():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    return render_template('dashboard.html')
 @app.route('/logout')
 def logout():
 
