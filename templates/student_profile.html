@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Student Profile</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+
+<div class="navbar">
+
+    <a href="/dashboard">Dashboard</a>
+
+    <a href="/students">Students</a>
+
+    <a href="/attendance">Attendance</a>
+
+    <a href="/add_marks">Marks</a>
+
+    <a href="/logout">Logout</a>
+
+</div>
+
+<h1>Student Profile</h1>
+
+<div class="profile-box">
+
+    <h2>{{ student[1] }}</h2>
+
+    <p><b>Roll Number:</b> {{ student[2] }}</p>
+
+    <p><b>Department:</b> {{ student[3] }}</p>
+
+    <p>
+        <b>Attendance Percentage:</b>
+
+        {{ attendance if attendance else 0 }}%
+    </p>
+
+    <p>
+        <b>Average Marks:</b>
+
+        {{ avg_marks if avg_marks else 0 }}
+    </p>
+
+</div>
+
+</body>
+</html>

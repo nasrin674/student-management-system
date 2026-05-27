@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,redirect,session
+from flask import Flask, render_template, request,redirect,session,flash
 import sqlite3
 
 app = Flask(__name__)
@@ -78,7 +78,7 @@ def add_student():
 
     conn.commit()
     conn.close()
-
+    flash('Student Added Successfully')
     return redirect('/students')
 @app.route('/students')
 def view_students():
@@ -177,6 +177,15 @@ def attendance():
         conn.close()
 
         return "Attendance Saved Successfully"
+    cursor.execute("SELECT * FROM students")
+    students = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'attendance.html',
+        students=students
+    )
 @app.route('/view_attendance')
 def view_attendance():
 
@@ -232,13 +241,7 @@ def attendance_report():
         'attendance_report.html',
         reports=reports
     )
-    # Load students
-    cursor.execute("SELECT * FROM students")
-    students = cursor.fetchall()
-
-    conn.close()
-
-    return render_template('attendance.html', students=students)
+    
 @app.route('/add_marks', methods=['GET', 'POST'])
 def add_marks():
 
@@ -330,6 +333,53 @@ def dashboard():
         return redirect('/login')
 
     return render_template('dashboard.html')
+@app.route('/student/<int:id>')
+def student_profile(id):
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    # Student details
+    cursor.execute(
+        "SELECT * FROM students WHERE id=?",
+        (id,)
+    )
+
+    student = cursor.fetchone()
+
+    # Attendance percentage
+    cursor.execute('''
+        SELECT
+
+        COUNT(CASE WHEN status='Present'
+              THEN 1 END) * 100.0 / COUNT(*)
+
+        FROM attendance
+
+        WHERE student_id=?
+    ''', (id,))
+
+    attendance = cursor.fetchone()[0]
+
+    # Average marks
+    cursor.execute('''
+        SELECT AVG(marks)
+
+        FROM marks
+
+        WHERE student_id=?
+    ''', (id,))
+
+    avg_marks = cursor.fetchone()[0]
+
+    conn.close()
+
+    return render_template(
+        'student_profile.html',
+        student=student,
+        attendance=attendance,
+        avg_marks=avg_marks
+    )
 @app.route('/logout')
 def logout():
 
