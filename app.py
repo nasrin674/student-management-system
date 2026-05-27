@@ -234,14 +234,24 @@ def attendance_report():
     ''')
 
     reports = cursor.fetchall()
+    names = []
+    percentages = []
+
+    for report in reports:
+
+        names.append(report[0])
+
+        percentages.append(report[1])
 
     conn.close()
 
     return render_template(
         'attendance_report.html',
-        reports=reports
+        reports=reports,
+        names=names,
+        percentages=percentages
     )
-    
+
 @app.route('/add_marks', methods=['GET', 'POST'])
 def add_marks():
 
@@ -326,6 +336,29 @@ def marks_report():
         'marks_report.html',
         reports=reports
     )
+@app.route('/department/<dept>')
+def department_students(dept):
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM students WHERE department=?",
+        (dept,)
+    )
+
+    students = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'department.html',
+        students=students,
+        dept=dept
+    )
 @app.route('/dashboard')
 def dashboard():
 
@@ -379,6 +412,149 @@ def student_profile(id):
         student=student,
         attendance=attendance,
         avg_marks=avg_marks
+    )
+@app.route('/department_attendance/<dept>', methods=['GET', 'POST'])
+def department_attendance(dept):
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+
+        date = request.form['date']
+
+        cursor.execute(
+            "SELECT * FROM students WHERE department=?",
+            (dept,)
+        )
+
+        students = cursor.fetchall()
+
+        for student in students:
+
+            student_id = student[0]
+
+            status = request.form.get(f'attendance_{student_id}')
+
+            cursor.execute(
+                "INSERT INTO attendance (student_id, date, status) VALUES (?, ?, ?)",
+                (student_id, date, status)
+            )
+
+        conn.commit()
+
+        conn.close()
+
+        return "Attendance Saved Successfully"
+
+    cursor.execute(
+        "SELECT * FROM students WHERE department=?",
+        (dept,)
+    )
+
+    students = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'department_attendance.html',
+        students=students,
+        dept=dept
+    )
+@app.route('/department_view_attendance/<dept>')
+def department_view_attendance(dept):
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT students.name,
+               attendance.date,
+               attendance.status
+
+        FROM attendance
+
+        JOIN students
+        ON attendance.student_id = students.id
+
+        WHERE students.department=?
+    ''', (dept,))
+
+    records = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'department_view_attendance.html',
+        records=records,
+        dept=dept
+    )
+@app.route('/department_view_marks/<dept>')
+def department_view_marks(dept):
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT students.name,
+               marks.subject,
+               marks.marks
+
+        FROM marks
+
+        JOIN students
+        ON marks.student_id = students.id
+
+        WHERE students.department=?
+    ''', (dept,))
+
+    records = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'department_view_marks.html',
+        records=records,
+        dept=dept
+    )
+@app.route('/department_add_marks/<dept>', methods=['GET', 'POST'])
+def department_add_marks(dept):
+
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+
+        student_id = request.form['student_id']
+
+        subject = request.form['subject']
+
+        marks = request.form['marks']
+
+        cursor.execute(
+            "INSERT INTO marks (student_id, subject, marks) VALUES (?, ?, ?)",
+            (student_id, subject, marks)
+        )
+
+        conn.commit()
+
+        conn.close()
+
+        return "Marks Added Successfully"
+
+    cursor.execute(
+        "SELECT * FROM students WHERE department=?",
+        (dept,)
+    )
+
+    students = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'department_add_marks.html',
+        students=students,
+        dept=dept
     )
 @app.route('/logout')
 def logout():

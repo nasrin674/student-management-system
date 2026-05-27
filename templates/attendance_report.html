@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
     <title>Attendance Report</title>
@@ -7,9 +8,13 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
+
 <body>
-    <div class="navbar">
+
+<div class="navbar">
 
     <a href="/dashboard">Dashboard</a>
 
@@ -23,32 +28,94 @@
 
 </div>
 
-    <h1>Attendance Percentage Report</h1>
+<h1>Attendance Percentage Report</h1>
 
-    <table border="1">
+<table border="1">
 
-        <tr>
-            <th>Student Name</th>
-            <th>Attendance Percentage</th>
-        </tr>
+    <tr>
 
-        {% for report in reports %}
+        <th>Student Name</th>
 
-        <tr>
+        <th>Attendance Percentage</th>
 
-            <td>{{ report[0] }}</td>
+    </tr>
 
-            <td>
+    {% for report in reports %}
 
-                {{ "%.2f"|format(report[1]) }} %
+    <tr>
 
-            </td>
+        <td>{{ report[0] }}</td>
 
-        </tr>
+        <td>
 
-        {% endfor %}
+            {{ "%.2f"|format(report[1]) }} %
 
-    </table>
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<br><br>
+
+<div style="width: 80%; margin: auto;">
+
+    <canvas id="attendanceChart"></canvas>
+
+</div>
+
+<script>
+
+const ctx = document.getElementById('attendanceChart');
+
+const names = JSON.parse('{{ names | tojson | safe }}');
+
+const percentages = JSON.parse('{{ percentages | tojson | safe }}');
+
+new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels: names,
+
+        datasets: [{
+
+            label: 'Attendance Percentage',
+
+            data: percentages,
+
+            borderWidth: 1
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true,
+
+                max: 100
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
 
 </body>
+
 </html>

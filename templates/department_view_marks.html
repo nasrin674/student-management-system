@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Department Marks</title>
+
+</head>
+
+<body>
+
+<h1>{{ dept }} Marks Records</h1>
+
+<table border="1">
+
+    <tr>
+
+        <th>Student Name</th>
+
+        <th>Subject</th>
+
+        <th>Marks</th>
+
+    </tr>
+
+    {% for record in records %}
+
+    <tr>
+
+        <td>{{ record[0] }}</td>
+
+        <td>{{ record[1] }}</td>
+
+        <td>{{ record[2] }}</td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+</body>
+
+</html>

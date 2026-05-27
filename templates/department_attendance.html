@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>{{ dept }} Attendance</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <a href="/dashboard">Dashboard</a>
+
+    <a href="/students">Students</a>
+
+    <a href="/logout">Logout</a>
+
+</div>
+
+<div class="container">
+
+    <h1>{{ dept }} Attendance</h1>
+
+    <form method="POST">
+
+        <div class="date-box">
+
+            <label>Select Date:</label>
+
+            <input type="date"
+                   name="date"
+                   required>
+
+        </div>
+
+        <table>
+
+            <tr>
+
+                <th>Student Name</th>
+
+                <th>Status</th>
+
+            </tr>
+
+            {% for student in students %}
+
+            <tr>
+
+                <td>{{ student[1] }}</td>
+
+                <td>
+
+                    <select name="attendance_{{ student[0] }}">
+
+                        <option value="Present">
+
+                            Present
+
+                        </option>
+
+                        <option value="Absent">
+
+                            Absent
+
+                        </option>
+
+                    </select>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        <br>
+
+        <div style="text-align:center;">
+
+            <button type="submit">
+
+                Save Attendance
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Department Students</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="navbar">
+
+    <a href="/dashboard">Dashboard</a>
+
+    <a href="/students">Students</a>
+
+    <a href="/attendance">Attendance</a>
+
+    <a href="/add_marks">Marks</a>
+
+    <a href="/logout">Logout</a>
+
+</div>
+
+<h1>{{ dept }} Department</h1>
+<br>
+
+<a href="/department_attendance/{{ dept }}">
+    <button>Mark Attendance</button>
+</a>
+
+<a href="/department_view_attendance/{{ dept }}">
+    <button>View Attendance</button>
+</a>
+
+<a href="/department_add_marks/{{ dept }}">
+    <button>Add Marks</button>
+</a>
+
+<a href="/department_view_marks/{{ dept }}">
+    <button>View Marks</button>
+</a>
+
+<br><br>
+
+<table border="1">
+
+    <tr>
+
+        <th>ID</th>
+
+        <th>Name</th>
+
+        <th>Roll Number</th>
+
+        <th>Department</th>
+
+    </tr>
+
+    {% for student in students %}
+
+    <tr>
+
+        <td>{{ student[0] }}</td>
+
+        <td>{{ student[1] }}</td>
+
+        <td>{{ student[2] }}</td>
+
+        <td>{{ student[3] }}</td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+</body>
+
+</html>
