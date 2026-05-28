@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
     <title>Marks Report</title>
@@ -7,30 +8,34 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
 </head>
+
 <body>
-    <div class="navbar">
+
+<div class="navbar">
 
     <a href="/dashboard">Dashboard</a>
 
     <a href="/students">Students</a>
 
-    <a href="/attendance">Attendance</a>
-
-    <a href="/add_marks">Marks</a>
-
     <a href="/logout">Logout</a>
 
 </div>
 
-    <h1>Student Marks Report</h1>
+<div class="container">
+
+    <h1>Marks Report</h1>
 
     <table border="1">
 
         <tr>
+
             <th>Student Name</th>
+
             <th>Average Marks</th>
-            <th>Grade</th>
+
         </tr>
 
         {% for report in reports %}
@@ -39,37 +44,7 @@
 
             <td>{{ report[0] }}</td>
 
-            <td>
-
-                {{ "%.2f"|format(report[1]) }}
-
-            </td>
-
-            <td>
-
-                {% if report[1] >= 90 %}
-
-                    A+
-
-                {% elif report[1] >= 75 %}
-
-                    A
-
-                {% elif report[1] >= 60 %}
-
-                    B
-
-                {% elif report[1] >= 40 %}
-
-                    C
-
-                {% else %}
-
-                    Fail
-
-                {% endif %}
-
-            </td>
+            <td>{{ "%.2f"|format(report[1]) }}</td>
 
         </tr>
 
@@ -77,5 +52,65 @@
 
     </table>
 
+    <br><br>
+
+    <canvas id="marksChart"
+            width="600"
+            height="300">
+    </canvas>
+
+</div>
+
+<script>
+
+const ctx = document.getElementById('marksChart').getContext('2d');
+
+const marksChart = new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+        labels:JSON.parse('{{ names | tojson| safe }}'),
+
+        datasets: [{
+
+            label: 'Average Marks',
+
+            data: JSON.parse('{{ averages | tojson | safe }}'),
+
+            backgroundColor: 'rgba(0, 173, 181, 0.7)',
+
+            borderColor: 'rgba(0, 173, 181, 1)',
+
+            borderWidth: 1
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true,
+
+                max: 100
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
 </body>
+
 </html>

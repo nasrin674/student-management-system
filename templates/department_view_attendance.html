@@ -3,41 +3,84 @@
 
 <head>
 
-    <title>Department Attendance Records</title>
+    <title>{{ dept }} Attendance Records</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
 <body>
 
-<h1>{{ dept }} Attendance Records</h1>
+<div class="navbar">
 
-<table border="1">
+    <a href="/dashboard">Dashboard</a>
 
-    <tr>
+    <a href="/students">Students</a>
 
-        <th>Student Name</th>
+    <a href="/department/{{ dept }}">
 
-        <th>Date</th>
+        Back
 
-        <th>Status</th>
+    </a>
 
-    </tr>
+    <a href="/logout">Logout</a>
 
-    {% for record in records %}
+</div>
 
-    <tr>
+<div class="container">
 
-        <td>{{ record[0] }}</td>
+    <h1>{{ dept }} Attendance Records</h1>
 
-        <td>{{ record[1] }}</td>
+    <table>
 
-        <td>{{ record[2] }}</td>
+        <tr>
 
-    </tr>
+            <th>Student Name</th>
 
-    {% endfor %}
+            <th>Date</th>
 
-</table>
+            <th>Status</th>
+
+        </tr>
+
+        {% for record in records %}
+
+        <tr>
+
+            <td>{{ record[0] }}</td>
+
+            <td>{{ record[1] }}</td>
+
+            <td>
+
+                {% if record[2] == 'Present' %}
+
+                    <span class="present">
+
+                        Present
+
+                    </span>
+
+                {% else %}
+
+                    <span class="absent">
+
+                        Absent
+
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
 
 </body>
 

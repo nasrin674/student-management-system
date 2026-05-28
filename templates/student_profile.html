@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
     <title>Student Profile</title>
@@ -8,6 +9,7 @@
           href="{{ url_for('static', filename='style.css') }}">
 
 </head>
+
 <body>
 
 <div class="navbar">
@@ -16,37 +18,56 @@
 
     <a href="/students">Students</a>
 
-    <a href="/attendance">Attendance</a>
-
-    <a href="/add_marks">Marks</a>
-
     <a href="/logout">Logout</a>
 
 </div>
 
-<h1>Student Profile</h1>
+<div class="profile-container">
 
-<div class="profile-box">
+    <h1>Student Profile</h1>
 
-    <h2>{{ student[1] }}</h2>
+    <div class="profile-card">
 
-    <p><b>Roll Number:</b> {{ student[2] }}</p>
+        <h2>{{ student[1] }}</h2>
 
-    <p><b>Department:</b> {{ student[3] }}</p>
+        <p>
 
-    <p>
-        <b>Attendance Percentage:</b>
+            <strong>Roll Number:</strong>
 
-        {{ attendance if attendance else 0 }}%
-    </p>
+            {{ student[2] }}
 
-    <p>
-        <b>Average Marks:</b>
+        </p>
 
-        {{ avg_marks if avg_marks else 0 }}
-    </p>
+        <p>
+
+            <strong>Department:</strong>
+
+            {{ student[3] }}
+
+        </p>
+
+        <hr>
+
+        <p>
+
+            <strong>Attendance Percentage:</strong>
+
+            {{ "%.2f"|format(attendance or 0) }} %
+
+        </p>
+
+        <p>
+
+            <strong>Average Marks:</strong>
+
+            {{ "%.2f"|format(avg_marks or 0) }}
+
+        </p>
+
+    </div>
 
 </div>
 
 </body>
+
 </html>

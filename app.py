@@ -330,11 +330,22 @@ def marks_report():
 
     reports = cursor.fetchall()
 
+    names = []
+    averages = []
+
+    for report in reports:
+
+        names.append(report[0])
+
+        averages.append(report[1])
+
     conn.close()
 
     return render_template(
         'marks_report.html',
-        reports=reports
+        reports=reports,
+        names=names,
+        averages=averages
     )
 @app.route('/department/<dept>')
 def department_students(dept):
@@ -365,7 +376,37 @@ def dashboard():
     if 'user' not in session:
         return redirect('/login')
 
-    return render_template('dashboard.html')
+    conn = sqlite3.connect('students.db')
+    cursor = conn.cursor()
+
+    # Total students
+    cursor.execute("SELECT COUNT(*) FROM students")
+    total_students = cursor.fetchone()[0]
+
+    # Total departments
+    cursor.execute("SELECT COUNT(DISTINCT department) FROM students")
+    total_departments = cursor.fetchone()[0]
+
+    # Total attendance records
+    cursor.execute("SELECT COUNT(*) FROM attendance")
+    total_attendance = cursor.fetchone()[0]
+
+    # Average marks
+    cursor.execute("SELECT AVG(marks) FROM marks")
+    avg_marks = cursor.fetchone()[0] or 0
+    cursor.execute("SELECT COUNT(*) FROM marks")
+    total_marks = cursor.fetchone()[0]
+
+    conn.close()
+
+    return render_template(
+        'dashboard.html',
+        total_students=total_students,
+        total_departments=total_departments,
+        total_attendance=total_attendance,
+        total_marks=total_marks,
+        avg_marks=avg_marks
+    )
 @app.route('/student/<int:id>')
 def student_profile(id):
 

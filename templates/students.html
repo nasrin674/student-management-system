@@ -103,6 +103,13 @@
             <td>{{ student[2] }}</td>
             <td>{{ student[3] }}</td>
             <td>
+                <a class="profile-btn"
+                    href="/student/{{ student[0] }}">
+
+                    Profile
+
+                </a>
+
                 <a class="edit-btn"
                     href="/edit/{{ student[0] }}">
                     Edit
@@ -113,14 +120,6 @@
                     onclick="return confirm('Are you sure you want to delete this student?')">
 
                     Delete
-
-                </a>
-                <br><br>
-
-                <a class="edit-btn"
-                    href="/student/{{ student[0] }}">
-
-                    View Profile
 
                 </a>
             </td>

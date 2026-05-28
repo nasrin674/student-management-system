@@ -3,57 +3,82 @@
 
 <head>
 
-    <title>Department Marks</title>
+    <title>Add Marks</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
 <body>
 
-<h1>Add Marks - {{ dept }}</h1>
+<div class="navbar">
 
-<form method="POST">
+    <a href="/dashboard">Dashboard</a>
 
-    <label>Student:</label>
+    <a href="/students">Students</a>
 
-    <select name="student_id">
+    <a href="/department/{{ dept }}">
 
-        {% for student in students %}
+        Back
 
-        <option value="{{ student[0] }}">
+    </a>
 
-            {{ student[1] }}
+    <a href="/logout">Logout</a>
 
-        </option>
+</div>
 
-        {% endfor %}
+<div class="container">
 
-    </select>
+    <h1>Add Marks - {{ dept }}</h1>
 
-    <br><br>
+    <form method="POST" class="marks-form">
 
-    <label>Subject:</label>
+        <label>Select Student</label>
 
-    <input type="text"
-           name="subject"
-           required>
+        <select name="student_id" required>
 
-    <br><br>
+            {% for student in students %}
 
-    <label>Marks:</label>
+            <option value="{{ student[0] }}">
 
-    <input type="number"
-           name="marks"
-           required>
+                {{ student[1] }}
 
-    <br><br>
+            </option>
 
-    <button type="submit">
+            {% endfor %}
 
-        Save Marks
+        </select>
 
-    </button>
+        <br><br>
 
-</form>
+        <label>Subject</label>
+
+        <input type="text"
+               name="subject"
+               placeholder="Enter Subject"
+               required>
+
+        <br><br>
+
+        <label>Marks</label>
+
+        <input type="number"
+               name="marks"
+               placeholder="Enter Marks"
+               required>
+
+        <br><br>
+
+        <button type="submit">
+
+            Save Marks
+
+        </button>
+
+    </form>
+
+</div>
 
 </body>
 

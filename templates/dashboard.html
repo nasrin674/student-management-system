@@ -11,48 +11,129 @@
 <body>
 
     <h1>Student Management Dashboard</h1>
-    <br><br>
+    <div class="stats-container">
 
-<a href="/department/CSE">
-    <button>CSE</button>
-</a>
+    <div class="stats-card">
 
-<a href="/department/ECE">
-    <button>ECE</button>
-</a>
+        <h2>{{ total_students }}</h2>
 
-<a href="/department/MECH">
-    <button>MECH</button>
-</a>
+        <p>Total Students</p>
 
-<a href="/department/CIVIL">
-    <button>CIVIL</button>
-</a>
-<a href="/department/EEE">
-    <button>EEE</button>
-</a>
+    </div>
 
-<a href="/department/AI">
-    <button>AI</button>
-</a>
+    <div class="stats-card">
 
+        <h2>{{ total_attendance }}</h2>
+
+        <p>Attendance Records</p>
+
+    </div>
+
+    <div class="stats-card">
+
+        <h2>{{ total_marks }}</h2>
+
+        <p>Marks Records</p>
+
+    </div>
+
+    <div class="stats-card">
+
+        <h2>{{ total_departments }}</h2>
+
+        <p>Departments</p>
+
+    </div>
+
+</div>
+    <div class="department-container">
+
+    <a href="/department/CSE" class="department-card">
+
+        CSE
+
+    </a>
+
+    <a href="/department/ECE" class="department-card">
+
+        ECE
+
+    </a>
+
+    <a href="/department/MECH" class="department-card">
+
+        MECH
+
+    </a>
+
+    <a href="/department/CIVIL" class="department-card">
+
+        CIVIL
+
+    </a>
+
+    <a href="/department/EEE" class="department-card">
+
+        EEE
+
+    </a>
+
+    <a href="/department/AI" class="department-card">
+
+        AI
+
+    </a>
+
+</div>
 <div class="dashboard">
 
-    <a href="/students">Manage Students</a>
+    <a href="/students" class="dashboard-card">
 
-    <a href="/attendance">Mark Attendance</a>
+        Manage Students
 
-    <a href="/view_attendance">View Attendance</a>
+    </a>
 
-    <a href="/attendance_report">Attendance Report</a>
+    <a href="/attendance" class="dashboard-card">
 
-    <a href="/add_marks">Add Marks</a>
+        Mark Attendance
 
-    <a href="/view_marks">View Marks</a>
+    </a>
 
-    <a href="/marks_report">Marks Report</a>
+    <a href="/view_attendance" class="dashboard-card">
 
-    <a href="/logout">Logout</a>
+        View Attendance
+
+    </a>
+
+    <a href="/attendance_report" class="dashboard-card">
+
+        Attendance Report
+
+    </a>
+
+    <a href="/add_marks" class="dashboard-card">
+
+        Add Marks
+
+    </a>
+
+    <a href="/view_marks" class="dashboard-card">
+
+        View Marks
+
+    </a>
+
+    <a href="/marks_report" class="dashboard-card">
+
+        Marks Report
+
+    </a>
+
+    <a href="/logout" class="dashboard-card logout-card">
+
+        Logout
+
+    </a>
 
 </div>
 

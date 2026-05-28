@@ -3,41 +3,88 @@
 
 <head>
 
-    <title>Department Marks</title>
+    <title>{{ dept }} Marks Records</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
 <body>
 
-<h1>{{ dept }} Marks Records</h1>
+<div class="navbar">
 
-<table border="1">
+    <a href="/dashboard">Dashboard</a>
 
-    <tr>
+    <a href="/students">Students</a>
 
-        <th>Student Name</th>
+    <a href="/department/{{ dept }}">
 
-        <th>Subject</th>
+        Back
 
-        <th>Marks</th>
+    </a>
 
-    </tr>
+    <a href="/logout">Logout</a>
 
-    {% for record in records %}
+</div>
 
-    <tr>
+<div class="container">
 
-        <td>{{ record[0] }}</td>
+    <h1>{{ dept }} Marks Records</h1>
 
-        <td>{{ record[1] }}</td>
+    <table>
 
-        <td>{{ record[2] }}</td>
+        <tr>
 
-    </tr>
+            <th>Student Name</th>
 
-    {% endfor %}
+            <th>Subject</th>
 
-</table>
+            <th>Marks</th>
+
+            <th>Result</th>
+
+        </tr>
+
+        {% for record in records %}
+
+        <tr>
+
+            <td>{{ record[0] }}</td>
+
+            <td>{{ record[1] }}</td>
+
+            <td>{{ record[2] }}</td>
+
+            <td>
+
+                {% if record[2] >= 40 %}
+
+                    <span class="pass">
+
+                        Pass
+
+                    </span>
+
+                {% else %}
+
+                    <span class="fail">
+
+                        Fail
+
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
 
 </body>
 
